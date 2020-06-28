@@ -84,8 +84,11 @@
 
     const canvas = document.createElement("canvas");
     canvas.style.margin = "1.5em 0 3em";
-    if (pre.nextSibling.tagName.toLowerCase() === "figcaption") {
-      pre.parentNode.insertBefore(canvas, pre.nextSibling.nextSibling);
+    if (
+      pre.nextSibling &&
+      pre.nextSibling.tagName.toLowerCase() === "figcaption"
+    ) {
+      pre.parentNode.parentNode.insertBefore(canvas, pre.parentNode);
     } else {
       pre.parentNode.insertBefore(canvas, pre.nextSibling);
     }
