@@ -83,6 +83,14 @@
     }
 
     const canvas = document.createElement("canvas");
+    const gl2 = false;
+    const gl = canvas.getContext("webgl");
+    canvas.getContext("webgl2") != null
+      ? canvas.getContext("webgl2")
+      : canvas.getContext("webgl");
+    if (!gl) {
+      return;
+    }
     canvas.style.margin = "0.8em 0 2.3em";
     if (
       pre.nextSibling &&
@@ -97,14 +105,8 @@
       pre.parentNode.insertBefore(canvas, pre.nextSibling);
     }
     adjustCanvas(canvas, width, height, heightAsRatio);
-    const gl2 = canvas.getContext("webgl2") != null;
-    const gl =
-      canvas.getContext("webgl2") != null
-        ? canvas.getContext("webgl2")
-        : canvas.getContext("webgl");
     const plane = twgl.primitives.createXYQuadBufferInfo(gl);
     const programInfo = resolveShader(gl, code, gl2);
-
     function render(time) {
       const uniforms = {
         iResolution: [gl.canvas.width, gl.canvas.height],
