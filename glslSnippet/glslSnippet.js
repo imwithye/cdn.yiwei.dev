@@ -83,7 +83,7 @@
     }
 
     const canvas = document.createElement("canvas");
-    canvas.style.margin = "1.5em 0 3em";
+    canvas.style.margin = "0.8em 0 2.3em";
     if (
       pre.nextSibling &&
       pre.nextSibling.tagName.toLowerCase() === "figcaption"
