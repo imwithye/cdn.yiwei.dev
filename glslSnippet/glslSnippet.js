@@ -1,29 +1,30 @@
 "use strict";
 (function (Prism) {
   function resolveShader(gl, code, gl2) {
-    const vs = `${gl2 ? "#version 300 es" : ""}
-${gl2 ? "layout(location = 0) in vec4 position;" : "attribute vec4 position;"}
-
-void main() {gl_Position = position; }
-`;
+    const vs = `${gl2 ? `#version 300 es` : ``}
+    ${
+      gl2
+        ? "layout(location = 0) in vec4 position;"
+        : "attribute vec4 position;"
+    }
+    void main() {gl_Position = position; }`;
 
     const fs = `${gl2 ? "#version 300 es" : ""}
-precision highp float;
-${gl2 ? "out vec4 FragColor;" : ""}
+    precision highp float;
+    ${gl2 ? "out vec4 FragColor;" : ""}
 
-${code}
+    ${code}
 
-void main() {
-${
-  gl2
-    ? `\tmainImage(FragColor, gl_FragCoord.xy);`
-    : `\tvec4 fragColor = vec4(0, 0, 0, 1);
-\tvec2 fragCoord = gl_FragCoord.xy;
-\tmainImage(fragColor, fragCoord);
-\tgl_FragColor = fragColor;`
-}
-}
-`;
+    void main() {
+    ${
+      gl2
+        ? `mainImage(FragColor, gl_FragCoord.xy);`
+        : `vec4 fragColor = vec4(0, 0, 0, 1);
+        vec2 fragCoord = gl_FragCoord.xy;
+        mainImage(fragColor, fragCoord);
+        gl_FragColor = fragColor;`
+    }
+    }`;
     return twgl.createProgramInfo(gl, [vs, fs]);
   }
 
