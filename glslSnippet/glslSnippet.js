@@ -86,9 +86,13 @@
     canvas.style.margin = "0.8em 0 2.3em";
     if (
       pre.nextSibling &&
+      pre.nextSibling.tagName &&
       pre.nextSibling.tagName.toLowerCase() === "figcaption"
     ) {
-      pre.parentNode.parentNode.insertBefore(canvas, pre.parentNode);
+      pre.parentNode.parentNode.insertBefore(
+        canvas,
+        pre.parentNode.nextSibling
+      );
     } else {
       pre.parentNode.insertBefore(canvas, pre.nextSibling);
     }
