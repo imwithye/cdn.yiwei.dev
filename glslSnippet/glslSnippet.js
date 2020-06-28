@@ -84,11 +84,12 @@
 
     const canvas = document.createElement("canvas");
     canvas.style.margin = "1.5em 0 3em";
-    pre.parentNode.insertBefore(canvas, pre.nextSibling);
+    if (pre.nextSibling.tagName.toLowerCase() === "figcaption") {
+      pre.parentNode.insertBefore(canvas, pre.nextSibling.nextSibling);
+    } else {
+      pre.parentNode.insertBefore(canvas, pre.nextSibling);
+    }
     adjustCanvas(canvas, width, height, heightAsRatio);
-    window.addEventListener("resize", () =>
-      adjustCanvas(canvas, width, height, heightAsRatio)
-    );
     const gl2 = canvas.getContext("webgl2") != null;
     const gl =
       canvas.getContext("webgl2") != null
@@ -98,15 +99,24 @@
     const programInfo = resolveShader(gl, code, gl2);
 
     function render(time) {
+      const uniforms = {
+        iResolution: [gl.canvas.width, gl.canvas.height],
+        iTime: time / 1000,
+      };
       gl.viewport(0, 0, canvas.width, canvas.height);
       gl.clearColor(0, 0, 0, 1);
       gl.clear(
         gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT
       );
       gl.useProgram(programInfo.program);
+      twgl.setUniforms(programInfo, uniforms);
       twgl.setBuffersAndAttributes(gl, programInfo, plane);
       twgl.drawBufferInfo(gl, plane);
     }
     requestAnimationFrame(render);
+    window.addEventListener("resize", () => {
+      adjustCanvas(canvas, width, height, heightAsRatio);
+      requestAnimationFrame(render);
+    });
   });
 })(Prism);
